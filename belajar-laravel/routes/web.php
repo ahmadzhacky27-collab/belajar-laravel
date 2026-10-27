@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BelajarController;
+use App\Http\Controllers\LoginController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,3 +18,10 @@ Route::get('kali', [BelajarController::class, 'kali'])->name('kali');
 Route::post('actionKali', [BelajarController::class, 'actionKali'])->name('actionKali');
 Route::get('bagi', [BelajarController::class, 'bagi'])->name('bagi');
 
+// prefix
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::get('/login', [\App\Http\Controllers\LoginController::class, 'login']);
+    Route::post('/actionLogin', [\App\Http\Controllers\LoginController::class, 'actionLogin'])->name('actionLogin');
+    Route::resource('dashboard', \App\Http\Controllers\DashboardController::class);
+    Route::resource('user', \App\Http\Controllers\UserController::class);
+});
