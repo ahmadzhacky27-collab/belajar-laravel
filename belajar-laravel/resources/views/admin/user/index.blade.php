@@ -25,12 +25,18 @@
                         <td>{{ $data->name ?? '' }}</td>
                         <td>{{ $data->email ?? '' }}</td>
                         <td>
-                            <a class="table-btn-action" title="Edit">
+                            <a class="table-btn-action" title="Edit" href="{{ route('admin.user.edit', $data->id) }}">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a class="table-btn-action delete" title="Delete">
-                                <i class="bi bi-trash"></i>
-                            </a>
+
+                            <form action="{{ route('admin.user.destroy', $data->id) }}" method="post" class="d-inline"
+                                onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="table-btn-action delete" title="Delete" type="submit">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
 
                         </td>
                     </tr>
