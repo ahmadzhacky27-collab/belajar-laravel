@@ -4,9 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BelajarController;
 use App\Http\Controllers\LoginController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
 
 //
 Route::get('belajar', [BelajarController::class, 'index']);
@@ -22,9 +20,11 @@ Route::get('bagi', [BelajarController::class, 'bagi'])->name('bagi');
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/login', [\App\Http\Controllers\LoginController::class, 'login']);
     Route::post('/actionLogin', [\App\Http\Controllers\LoginController::class, 'actionLogin'])->name('actionLogin');
+
     Route::resource('dashboard', \App\Http\Controllers\DashboardController::class);
     Route::resource('user', \App\Http\Controllers\UserController::class);
+    Route::resource('category', \App\Http\Controllers\CategoryController::class);
 
     Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])->name('settings');
-    Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'store'])->name('settings.store');
 });

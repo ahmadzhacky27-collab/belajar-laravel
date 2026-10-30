@@ -11,7 +11,7 @@
     <meta name="author" content="Spark Admin Team">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="icon" type="image/png" href="assets/images/favicon.ico">
 
     <!-- Local Third-Party Libraries (100% Offline Compatible) -->
     <link rel="stylesheet" href="{{ asset('assets/libs/bootstrap/css/bootstrap.min.css') }}">
@@ -61,6 +61,33 @@
         <!-- END: Page Header Banner -->
 
         <!-- START: Blank Page Content Area -->
+        @if (session('success'))
+            <div class="alert alert-success mb-3">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <strong>Success</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-warning mb-3">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                <strong>Error</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-warning mb-3">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                <strong>Peringatan:</strong> Terdapat beberapa kesalahan pengisian form:
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="card p-4 border-light shadow-sm">
             @yield('content')
         </div>
@@ -71,15 +98,14 @@
         <footer class="footer-custom">
             <div class="footer-left">
                 <span class="footer-logo">
-                    <i class="bi bi-asterisk"></i> PPKD Sticker Admin
+                    <i class="bi bi-asterisk"></i> PPKD Sitcker
                 </span>
                 <span class="footer-separator">|</span>
-                <span class="footer-copy">&copy; {{ date('Y') }} Made with <i
+                <span class="footer-copy">&copy; 2026 Made with <i
                         class="bi bi-heart-fill text-danger footer-heart"></i> by<a
-                        href="https://sparkadminpro.gumroad.com/" target="_blank">Joko Olso</a>• Distributed by <a
-                        href="https://www.themewagon.com/" target="_blank">ThemeWagon</a> </span>
+                        href="https://sparkadminpro.gumroad.com/" target="_blank">Joko Oslo</a>• Distributed by <a
+                        href="https://www.themewagon.com/" target="_blank">themewagon</a> </span>
             </div>
-
         </footer>
         <!-- END: Footer Component -->
 
