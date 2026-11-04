@@ -15,6 +15,7 @@ class CategoryController extends Controller
     {
         $title = "Management Kategori Produk";
         $categories = Category::orderBy('sort_order')->get();
+
         return view('admin.category.index', compact('title', 'categories'));
     }
 
@@ -93,5 +94,4 @@ class CategoryController extends Controller
         // Category::where('id', $id)->delete
         return redirect()->route('admin.category.index')->with('success', 'Kategori Produk berhasil dihapus!');
     }
-
 }
