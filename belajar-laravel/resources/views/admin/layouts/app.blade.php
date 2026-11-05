@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
     {{-- QUILL --}}
-    {{-- <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" /> --}}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -126,12 +126,16 @@
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
 
     {{-- QUILL --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <script>
         const quill = new Quill('#editor', {
             theme: 'snow'
         });
-    </script> --}}
+
+        quill.on('text-change', function(delta, oldDelta, source) {
+            document.querySelector("textarea[name='description']").value = quill.root.innerHTML;
+        });
+    </script>
 </body>
 
 </html>

@@ -37,8 +37,10 @@
 
         <div class="mb-3">
             <label for="">Deskripsi</label>
-            <textarea name="description" id="editor" cols="30" rows="10" class="form-control"></textarea>
+            <textarea name="description" cols="30" rows="10" class="d-none form-control"></textarea>
+            <div id="editor">{!! old('description') !!}</div>
         </div>
+
 
         <div class="row">
             <div class="col-sm-3">

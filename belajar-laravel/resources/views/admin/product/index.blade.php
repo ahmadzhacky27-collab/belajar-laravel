@@ -16,6 +16,7 @@
                     <th>Kategori</th>
                     <th>Nama Produk</th>
                     <th>Harga</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,19 @@
                         <td>{{ $item->category->name }}</td>
                         <td>{{ $item->name }}</td>
                         <td>Rp. {{ number_format($item->price, 2, ',', '.') }}</td>
+                        <td>
+                            <a class="table-btn-action" title="Edit" href="{{ route('admin.product.edit', $item->id) }}">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{{ route('admin.product.destroy', $item->id) }}" method="post" class="d-inline"
+                                onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="table-btn-action delete" title="Delete" type="submit">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
