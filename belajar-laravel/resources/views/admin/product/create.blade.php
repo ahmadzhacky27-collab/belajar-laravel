@@ -76,8 +76,8 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="mb-3">
-                    <label for="">Harga Laminating Doft</label>
-                    <input type="number" name="price_dift" class="form-control">
+                    <label for="">Harga Laminating Doff</label>
+                    <input type="number" name="price_doff" class="form-control">
                 </div>
             </div>
 
@@ -103,7 +103,15 @@
 
         <div class="mb-3">
             <label for="">Gambar</label>
-            <input type="file" name="image" class="form-control">
+            <input type="file" name="image[]" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="">Gambar</label>
+            <input type="file" name="image[]" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="">Gambar</label>
+            <input type="file" name="image[]" class="form-control">
         </div>
         <div class="mb-3">
             <button type="submit" class="btn-custom btn-custom-primary">

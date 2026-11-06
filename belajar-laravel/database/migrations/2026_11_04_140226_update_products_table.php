@@ -21,8 +21,8 @@ return new class extends Migration
             $table->integer('price_art_cartoon')->nullable()->after('price');
             $table->integer('price_art_paper')->nullable()->after('price_art_cartoon');
             $table->integer('price_hvs')->nullable()->after('price_art_paper');
-            $table->integer('price_doft')->nullable()->after('price_hvs');
-            $table->integer('price_glossy')->nullable()->after('price_doft');
+            $table->integer('price_doff')->nullable()->after('price_hvs');
+            $table->integer('price_glossy')->nullable()->after('price_doff');
             $table->integer('price_cutting')->nullable()->after('price_glossy');
 
 

@@ -16,9 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $title = 'Managemen Produk || PPKD Sticker';
+        $title = 'Manajemen Produk || PPKD Sticker';
         $products = Product::with('category')->get();
-        // $category = Category::with('products')->count();
 
         return view('admin.product.index', compact('title', 'products'));
     }
@@ -37,8 +36,6 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -54,49 +51,68 @@ class ProductController extends Controller
             'price_hvs' => 'nullable|numeric',
             'price_doff' => 'nullable|numeric',
             'price_glossy' => 'nullable|numeric',
-            'price_cutting' => 'nullable|numeric',
+            'cutting_price' => 'nullable|numeric',
 
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:png,jpg,jpeg,webp|max:2048',
             'alt' => 'nullable|array',
             'alt.*' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
-
         ]);
 
-        DB::transaction(function () use ($request, $validated) {
+        // Buat slug otomatis jika kosong
+        $slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['name']);
+
+        DB::transaction(function () use ($request, $validated, $slug) {
             $product = Product::create([
                 'category_id' => $validated['category_id'],
                 'name' => $validated['name'],
+                'image' => null,
+                'slug' => $slug,
+                'price' => $validated['price'],
+                'brief_description' => $validated['brief_description'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'price_art_cartoon' => $validated['price_art_cartoon'] ?? null,
+                'price_art_paper' => $validated['price_art_paper'] ?? null,
+                'price_hvs' => $validated['price_hvs'] ?? null,
+                'price_doff' => $validated['price_doff'] ?? null,
+                'price_glossy' => $validated['price_glossy'] ?? null,
+                'cutting_price' => $validated['cutting_price'] ?? null,
             ]);
+
+            if ($request->hasFile('images')) {
+                $imageData = [];
+                $firstImageData = null;
+
+                foreach ($request->file('images') as $key => $file) {
+                    $path = $file->store('products', 'public');
+                    if ($key === 0) {
+                        $firstImageData = $path;
+                    }
+
+                    // Perbaikan petik ganda untuk interpolasi string $key
+                    $imageData[] = [
+                        'path' => $path,
+                        'alt' => $request->input("alt.{$key}") ?? $product->name,
+                        'sort_order' => $key + 1,
+                    ];
+                }
+
+                // Pastikan relasi images() sudah ada di model Product jika menggunakan baris ini
+                if (method_exists($product, 'images')) {
+                    $product->images()->createMany($imageData);
+                }
+
+                if ($firstImageData) {
+                    $product->update([
+                        'image' => $firstImageData
+                    ]);
+                }
+            }
         });
 
-        if ($request->hasFile('images')) {
-            $imageData = [];
-
-            foreach ($request->file('images') as $key => $file) {
-                $path = $file->store('products', 'public');
-
-                $imageData[] = [
-                    'path' => $path,
-                    'alt' => $request->input('alt.{$key}') ?? $product->name,
-                    'sort_order' => $key + 1,
-                ];
-            }
-        }
         return redirect()->route('admin.product.index')->with('success', 'Product berhasil ditambahkan!');
     }
-
-        // if (empty($validated['slug'])) {
-        //     $validated['slug'] = Str::slug($validated['name']);
-        // }
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('products', 'public');
-        //     $validated['image'] = $imagePath;
-        // }
-        // Product::create($validated);
-
-
 
     /**
      * Display the specified resource.
@@ -140,6 +156,7 @@ class ProductController extends Controller
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);
         }
+
         if ($request->hasFile('image')) {
             if ($product->image && Storage::disk('public')->exists($product->image)) {
                 Storage::disk('public')->delete($product->image);
@@ -148,6 +165,7 @@ class ProductController extends Controller
             // Upload gambar baru
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
+
         $product->update($validated);
         return redirect()->route('admin.product.index')->with('success', 'Product berhasil diupdate!');
     }
@@ -157,12 +175,14 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
-        if ($product->img) {
-            Storage::disk('public')->delete($product->img);
+        // Diperbaiki dari $product->img menjadi $product->image
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();
+        return redirect()->route('admin.product.index')->with('success', 'Product berhasil dihapus!');
     }
 }
