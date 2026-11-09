@@ -52,8 +52,15 @@
                 <li class="sidebar-menu-item">
                     <a href="{{ route('admin.category.index') }}" class="sidebar-menu-link" id="menu-blankpage"
                         title="Blank Page">
-                        <i class="bi bi-file-earmark"></i>
-                        <span>Kategori Produk</span>
+                        <i class="bi bi-bag-check-fill"></i>
+                        <span>Category Product</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="{{ route('admin.product.index') }}" class="sidebar-menu-link" id="menu-loginpage"
+                        title="Login Page">
+                        <i class="bi bi-bag"></i>
+                        <span>Product</span>
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
@@ -64,16 +71,23 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="{{ route('admin.product.index') }}" class="sidebar-menu-link" id="menu-loginpage"
+                    <a href="{{ route('admin.category_blog.index') }}" class="sidebar-menu-link" id="menu-loginpage"
                         title="Login Page">
-                        <i class="bi bi-people"></i>
-                        <span>Product</span>
+                        <i class="bi bi-bookmark-plus-fill"></i>
+                        <span>Category Blog</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="{{ route('admin.blog.index') }}" class="sidebar-menu-link" id="menu-loginpage"
+                        title="Login Page">
+                        <i class="bi bi-bookmark-dash"></i>
+                        <span>Blog</span>
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
                     <a href="{{ route('admin.settings') }}" class="sidebar-menu-link" id="menu-404" title="404 Page">
                         <i class="bi bi-gear"></i>
-                        <span>Pengaturan</span>
+                        <span>Settings</span>
                     </a>
                 </li>
 
@@ -84,10 +98,10 @@
     <!-- Sidebar Profile Card (Dynamic Footer) -->
     <div class="sidebar-profile">
         <img src="assets/images/avatar.png" alt="Administrator" class="sidebar-profile-img"
-            onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop'">
+            onerror="this.src='https://plus.unsplash.com/premium_vector-1727953895370-731b77162e13?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D'">
         <div class="sidebar-profile-info">
-            <div class="sidebar-profile-name">{{ auth()->user()->name ?? '' }}</div>
-            <div class="sidebar-profile-email">{{ auth()->user()->email ?? '' }}</div>
+            <div class="sidebar-profile-name">{{ auth()->user()->name ?? 'Guest User' }}</div>
+            <div class="sidebar-profile-email">{{ auth()->user()->email ?? 'guest@ppkd.com' }}</div>
         </div>
     </div>
 </div>
