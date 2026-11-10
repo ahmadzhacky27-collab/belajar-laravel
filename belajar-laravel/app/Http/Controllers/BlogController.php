@@ -17,7 +17,8 @@ class BlogController extends Controller
     public function index()
     {
         $title = 'Manajemen Blog || PPKD Sticker';
-        $blogs = Blog::with('category_blog')->get();
+        $blogs = Blog::with('blogCategory')->get();
+
         return view('admin.blog.index', compact('title', 'blogs'));
     }
 
@@ -38,20 +39,22 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
-            'blog_category_id' => 'required|exists:category_blog,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:blogs,slug',
+            'blog_category_id' => 'required|exists:category_blogs,id',
             'brief_description' => 'nullable|string',
-            'slug' => 'nullable|string|unique:category_blogs,slug,',
             'content' => 'nullable|string',
             'author' => 'nullable|string',
-            'cover_path' => 'image|mimes:png,jpg,jpeg,webp|max:2048',
+            'cover_path' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
         ]);
 
         if ($request->hasFile('cover_path')) {
             $validated['cover_path'] = $request->file('cover_path')->store('blogs', 'public');
         }
 
-        $validated['slug'] = $validated['slug'] ? Str::slug($validated['slug']) : Str::slug($validated['name']);
+        // Ambil slug aman dari request input
+        $slugInput = $request->input('slug');
+        $validated['slug'] = !empty($slugInput) ? Str::slug($slugInput) : Str::slug($validated['name']);
 
         Blog::create($validated);
 
@@ -72,7 +75,9 @@ class BlogController extends Controller
     public function edit(Blog $blog)
     {
         $title = "Ubah Blog || PPKD Sticker";
-        return view('admin.category_blog.edit', compact('blog', 'title'));
+        $categories = CategoryBlog::get();
+
+        return view('admin.blog.edit', compact('blog', 'title', 'categories'));
     }
 
     /**
@@ -81,22 +86,25 @@ class BlogController extends Controller
     public function update(Request $request, Blog $blog)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
-            'blog_category_id' => 'required|exists:category_blog,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:blogs,slug,' . $blog->id,
+            'blog_category_id' => 'required|exists:category_blogs,id',
             'brief_description' => 'nullable|string',
             'content' => 'nullable|string',
             'author' => 'nullable|string',
-            'cover_path' => 'image|mimes:png,jpg,jpeg,webp|max:2048',
+            'cover_path' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
         ]);
 
         if ($request->hasFile('cover_path')) {
-            if($blog->cover_path){
+            if ($blog->cover_path && Storage::disk('public')->exists($blog->cover_path)) {
                 Storage::disk('public')->delete($blog->cover_path);
             }
             $validated['cover_path'] = $request->file('cover_path')->store('blogs', 'public');
         }
 
-        $validated['slug'] = $validated['slug'] ? Str::slug($validated['slug']) : Str::slug($validated['name']);
+        // Ambil slug aman dari request input
+        $slugInput = $request->input('slug');
+        $validated['slug'] = !empty($slugInput) ? Str::slug($slugInput) : Str::slug($validated['name']);
 
         $blog->update($validated);
 
@@ -110,12 +118,11 @@ class BlogController extends Controller
     {
         $blog = Blog::findOrFail($id);
 
-        // Diperbaiki dari $product->img menjadi $product->image
-        if ($blog->image && Storage::disk('public')->exists($blog->image)) {
-            Storage::disk('public')->delete($blog->image);
+        if ($blog->cover_path && Storage::disk('public')->exists($blog->cover_path)) {
+            Storage::disk('public')->delete($blog->cover_path);
         }
 
         $blog->delete();
-        return redirect()->route('admin.blog.index')->with('success', 'blog berhasil dihapus!');
+        return redirect()->route('admin.blog.index')->with('success', 'Blog berhasil dihapus!');
     }
 }

@@ -56,13 +56,14 @@ class CategoryBlogController extends Controller
     public function edit(CategoryBlog $categoryBlog)
     {
         $title = 'Edit Kategori Blog || PPKD Sticker';
-        return view('admin.category_blog.edit', compact('categoryBlog', 'title'));
+        return view('admin.category_blog.edit', compact('title', 'categoryBlog'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, CategoryBlog $categoryBlog)
+
     {
         $validated = $request->validate([
             'name' => 'required|string',

@@ -16,7 +16,7 @@ class Blog extends Model
         'slug',
     ];
 
-    public function category()
+    public function blogCategory()
     {
         return $this->belongsTo(CategoryBlog::class);
     }

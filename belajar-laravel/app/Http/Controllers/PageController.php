@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Models\Setting;
+use App\Models\Setting;
+use App\Models\Blog;
+use App\Models\CategoryBlog;
 
 class PageController extends Controller
 {
@@ -20,11 +22,17 @@ class PageController extends Controller
 
     public function blog()
     {
-        return view('blog.index');
+        $categories = CategoryBlog::withCount('blogs')->get();
+        $totalBlogsCount = Blog::count();
+        $blogs = Blog::with('blogCategory')->orderBy('id', 'desc')->get();
+
+        return view('blog.index', compact('blogs', 'categories', 'totalBlogsCount'));
     }
 
-    public function showBlog(string $id)
+    public function showBlog($slug)
     {
-        return view('blog.show');
+        $blog = Blog::where('slug', $slug)->with('blogCategory')->firstOrFail();
+
+        return view('blog.show', compact('blog'));
     }
 }
